@@ -39,12 +39,12 @@ class RegisterViewController: UIViewController {
             if error != nil
             {
                // worked
-               print("registration complete")
+               print(error!)
             }
             else
             {
                // error occured
-               print(error)
+               print("registration complete")
             }
         }
         
