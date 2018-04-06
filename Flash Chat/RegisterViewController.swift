@@ -39,12 +39,12 @@ class RegisterViewController: UIViewController {
         password: passwordTextfield.text!) { (user, error) in
             if error != nil
             {
-               // worked
+               // errored
                print(error!)
             }
             else
             {
-               // error occured
+               // worked
                print("registration complete")
                self.performSegue(withIdentifier: "goToChat", sender: self)
                 
