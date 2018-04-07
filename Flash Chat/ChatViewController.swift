@@ -51,13 +51,15 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         configureTableView()
         
+        retrieveMessages()
+        
     }
 
     ///////////////////////////////////////////
     
     //MARK: - TableView DataSource Methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return messagesArray.count
     }
     
     
@@ -65,9 +67,12 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customMessageCell", for: indexPath) as! CustomMessageCell
         
-        let messageArray = ["First Message","Second Message","Third Message"]
         
-        cell.messageBody.text = messageArray[indexPath.row]
+        
+        cell.messageBody.text = self.messagesArray[indexPath.row].messageBody
+        cell.senderUsername.text = self.messagesArray[indexPath.row].sender
+        cell.avatarImageView.image = #imageLiteral(resourceName: "egg")
+        
         
         return cell
         
@@ -172,7 +177,24 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     //TODO: Create the retrieveMessages method here:
-    
+    func retrieveMessages()
+    {
+        let messagesDB = Database.database().reference().child("messages")
+        
+        messagesDB.observe(.childAdded) { (snapshot) in
+         print("got new messages")
+         let snapshotValue = snapshot.value as! [String : String]
+         let newMessage = Message()
+         newMessage.messageBody = snapshotValue["MessageBody"]!
+         newMessage.sender = snapshotValue["Sender"]!
+         self.messagesArray.append(newMessage)
+         print(newMessage.messageBody)
+         print(newMessage.sender)
+         self.configureTableView()
+         self.messageTableView.reloadData()
+        }
+        
+    }
     
 
     
